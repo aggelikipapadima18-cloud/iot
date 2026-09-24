@@ -1,0 +1,33 @@
+README: Sensing Application
+
+This TinyOS example has been adapted for the IoT project star topology.
+
+Structure:
+
+- Base: base station application. Install this on node id 0.
+- Sampler: leaf/sampling application. Install this on node ids 1, 2, ...
+- sampleLog: shared logging and sample reading components.
+- tmote_onboard_sensors: real TelosB/Tmote onboard sensor implementation.
+- universal_sensors: compatible fake/universal sensor implementation.
+- java: optional Java helper from the original example.
+
+Project behavior:
+
+- The base station address is defined as BASE_STATION_ADDR = 0.
+- Leaf nodes periodically send measurements to the base station.
+- The sampling interval is SAMPLING_INTERVAL = 20000 ms.
+- The base prints each received sample in one parseable line:
+
+ID=5 Count=12 Temp=3021 Humidity=4210 Photo=15 Solar=44
+
+This line format is consumed by ../../tools/mongo_ingest.py, which stores the readings in MongoDB.
+
+Example TelosB commands:
+
+cd Base
+sudo make telosb install.0 bsl,/dev/ttyUSB0 SENSOR_DIR=tmote_onboard_sensors
+
+cd ../Sampler
+sudo make telosb install.1 bsl,/dev/ttyUSB0 SENSOR_DIR=tmote_onboard_sensors
+
+For IRIS builds use the iris target and the MIB520 programmer device.
